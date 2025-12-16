@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | Diet Optimizer</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-flex">
+            <span class="logo">🥗 Diet Optimizer</span>
+            <ul class="nav-links">
+                <li><a href="home.html" class="active">Home</a></li>
+                <li><a href="foods.html">Food Database</a></li>
+                <li><a href="history.html">History & Analytics</a></li>
+            </ul>
+        </div>
+    </nav>
+    <main class="container">
+        <section class="intro">
+            <h1>Welcome to Diet Optimizer</h1>
+            <p>Find the best meal plan for your goals, budget, and nutrition needs using advanced AI optimization.</p>
+        </section>
+        <section class="form-section">
+            <form id="diet-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="calories">Calories (kcal)</label>
+                        <input type="number" id="calories" name="calories" value="2000" min="1000" max="4000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="protein">Protein (g)</label>
+                        <input type="number" id="protein" name="protein" value="100" min="10" max="300" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="carbs">Carbs (g)</label>
+                        <input type="number" id="carbs" name="carbs" value="250" min="50" max="600" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fat">Fat (g)</label>
+                        <input type="number" id="fat" name="fat" value="70" min="10" max="200" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="budget">Budget ($)</label>
+                        <input type="number" id="budget" name="budget" value="10" min="1" max="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="population">Population Size</label>
+                        <input type="number" id="population" name="population" value="30" min="10" max="200" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="generations">Generations</label>
+                        <input type="number" id="generations" name="generations" value="50" min="10" max="500" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">Optimize Diet</button>
+            </form>
+        </section>
+        <div class="center-btns">
+            <a href="foods.html" class="btn-primary" style="margin-right:16px;">Manage Foods</a>
+            <a href="history.html" class="btn-primary">View History & Analytics</a>
+        </div>
+        <section id="result-section" class="result-section" style="display:none;">
+            <h2>Optimized Diet Plan</h2>
+            <div id="result-summary"></div>
+            <table id="result-table">
+                <thead>
+                    <tr>
+                        <th>Food</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <div id="result-score"></div>
+        </section>
+    </main>
+    <footer>
+        <div class="container">
+            <span>© 2025 Diet Optimizer | Powered by Genetic Algorithms & MongoDB</span>
+        </div>
+    </footer>
+    <script src="app.js"></script>
+</body>
+</html>
