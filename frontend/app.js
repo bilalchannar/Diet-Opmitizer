@@ -77,9 +77,8 @@ async function handleOptimizeSubmit(e) {
         resultTable.appendChild(row);
       });
 
-      resultScore.innerHTML = `<b>Fitness Score:</b> ${Number(
-        result.score
-      ).toFixed(2)}`;
+      const formattedScore = Number(result.score).toFixed(2);
+      resultScore.innerHTML = `<b>Fitness Score:</b> ${formattedScore} / 100`;
 
       // Safe chart call (won’t crash if Chart/canvas missing)
       showCharts(result.diet);
@@ -220,6 +219,60 @@ async function loadHistory() {
   historyBest.innerHTML = history.length
     ? `Best Score: ${Number(bestScore).toFixed(2)} | Most Used Food: ${mostUsed ? mostUsed[0] : "-"}`
     : "";
+
+  // Render charts for history: aggregated food usage and cost over time
+  try {
+    const nutCanvas = document.getElementById("nutrition-chart");
+    const costCanvas = document.getElementById("cost-chart");
+
+    if (typeof Chart !== "undefined" && nutCanvas) {
+      const labels = Object.keys(foodCount);
+      const data = labels.map((l) => foodCount[l] || 0);
+
+      if (window.historyNutritionChart) window.historyNutritionChart.destroy();
+
+      window.historyNutritionChart = new Chart(nutCanvas.getContext("2d"), {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [
+            {
+              label: "Total Quantity (history)",
+              data,
+              backgroundColor: "rgba(67,160,71,0.7)",
+            },
+          ],
+        },
+        options: { responsive: true, plugins: { legend: { display: false } } },
+      });
+    }
+
+    if (typeof Chart !== "undefined" && costCanvas) {
+      const labels = history.map((h) => (h.created_at ? new Date(h.created_at).toLocaleString() : "-"));
+      const costs = history.map((h) => (typeof h.cost === "number" ? h.cost : 0));
+
+      if (window.historyCostChart) window.historyCostChart.destroy();
+
+      window.historyCostChart = new Chart(costCanvas.getContext("2d"), {
+        type: "line",
+        data: {
+          labels,
+          datasets: [
+            {
+              label: "Total Cost",
+              data: costs,
+              borderColor: "#43a047",
+              backgroundColor: "rgba(67,160,71,0.15)",
+              tension: 0.2,
+            },
+          ],
+        },
+        options: { responsive: true, plugins: { legend: { display: false } } },
+      });
+    }
+  } catch (e) {
+    console.error("Failed to render history charts:", e);
+  }
 }
 
 

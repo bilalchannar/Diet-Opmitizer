@@ -14,7 +14,7 @@ body {
 .nav-flex {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 .logo {
     margin-right: 24px;
@@ -27,6 +27,7 @@ body {
     margin: 0 auto;
     padding: 0 18px;
 }
+.navbar .container { max-width: 100%; margin: 0; padding: 0 18px; }
 .intro {
     text-align: center;
     margin: 36px 0 18px 0;
@@ -149,8 +150,7 @@ footer {
 }
 .food-form input[type="text"],
 .food-form input[type="number"] {
-    flex: 1 1 120px;
-    min-width: 90px;
+    flex: 1 1 50px;
     padding: 8px 8px;
     border: 1.5px solid #cfd8dc;
     border-radius: 5px;
@@ -242,6 +242,7 @@ footer {
     margin: 0;
     padding: 0;
     float: right;
+    margin-left: auto;
 }
 .nav-links li {
     display: inline;
