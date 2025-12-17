@@ -1,8 +1,8 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
-from pymongo import MongoClient
 import os
+from flask_cors import CORS
 from datetime import datetime
+from pymongo import MongoClient
+from flask import Flask, request, jsonify
 from genetic_algorithm import run_genetic_algorithm
 
 app = Flask(__name__)
@@ -70,15 +70,13 @@ def optimize():
     }
 
     db.results.insert_one(result_doc)
-    return jsonify(result_doc)          # return it to frontend too
+    del result_doc['_id']  # remove MongoDB internal ID before sending back
+    return jsonify(result_doc)  # return it to frontend too
 
 @app.route('/results', methods=['GET'])
 def get_results():
     results = list(db.results.find({}, {'_id': 0}))
     return jsonify(results)
-
-
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=False)
