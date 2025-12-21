@@ -29,38 +29,57 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="calories">Calories (kcal)</label>
-                        <input type="number" id="calories" name="calories" value="2000" min="1000" max="4000" required>
+                        <input type="number" id="calories" name="calories" min="1000" max="4000" required>
                     </div>
                     <div class="form-group">
                         <label for="protein">Protein (g)</label>
-                        <input type="number" id="protein" name="protein" value="100" min="10" max="300" required>
+                        <input type="number" id="protein" name="protein" min="10" max="300" required>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="carbs">Carbs (g)</label>
-                        <input type="number" id="carbs" name="carbs" value="250" min="50" max="600" required>
+                        <input type="number" id="carbs" name="carbs" min="50" max="600" required>
                     </div>
                     <div class="form-group">
                         <label for="fat">Fat (g)</label>
-                        <input type="number" id="fat" name="fat" value="70" min="10" max="200" required>
+                        <input type="number" id="fat" name="fat" min="10" max="200" required>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="budget">Budget ($)</label>
-                        <input type="number" id="budget" name="budget" value="10" min="1" max="100" required>
+                        <input type="number" id="budget" name="budget" min="1" max="100" required>
                     </div>
                     <div class="form-group">
                         <label for="population">Population Size</label>
-                        <input type="number" id="population" name="population" value="30" min="10" max="200" required>
+                        <input type="number" id="population" name="population" min="10" max="200" required>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="generations">Generations</label>
-                        <input type="number" id="generations" name="generations" value="50" min="10" max="500" required>
+                        <input type="number" id="generations" name="generations" min="10" max="500" required>
                     </div>
+                    <div class="form-group">
+                        <label for="tolerance">CSP Tolerance (%)</label>
+                        <input type="number" id="tolerance" name="tolerance" min="5" max="50">
+                    </div>
+                </div>
+                <div class="form-row technique-selector">
+                    <label>Select Optimization Technique:</label>
+                    <div class="technique-buttons">
+                        <button type="button" class="technique-btn active" data-technique="ga">
+                            🧬 Genetic Algorithm
+                        </button>
+                        <button type="button" class="technique-btn" data-technique="csp">
+                            🧩 CSP (Constraint Satisfaction)
+                        </button>
+                        <button type="button" class="technique-btn" data-technique="both">
+                            ⚖️ Compare Both
+                        </button>
+                    </div>
+                    <input type="hidden" id="technique" name="technique" value="ga">
                 </div>
                 <button type="submit" class="btn-primary">Optimize Diet</button>
             </form>
@@ -71,6 +90,7 @@
         </div>
         <section id="result-section" class="result-section" style="display:none;">
             <h2>Optimized Diet Plan</h2>
+            <div id="technique-label" class="technique-label"></div>
             <div id="result-summary"></div>
             <table id="result-table">
                 <thead>
@@ -82,6 +102,32 @@
                 <tbody></tbody>
             </table>
             <div id="result-score"></div>
+        </section>
+        
+        <!-- Comparison section for "both" technique -->
+        <section id="comparison-section" class="result-section" style="display:none;">
+            <h2>⚖️ Technique Comparison</h2>
+            <div class="comparison-container">
+                <div class="comparison-card ga-card">
+                    <h3>🧬 Genetic Algorithm</h3>
+                    <div id="ga-summary"></div>
+                    <table id="ga-table">
+                        <thead><tr><th>Food</th><th>Qty</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                    <div id="ga-score" class="score-display"></div>
+                </div>
+                <div class="comparison-card csp-card">
+                    <h3>🧩 CSP (Constraint Satisfaction)</h3>
+                    <div id="csp-summary"></div>
+                    <table id="csp-table">
+                        <thead><tr><th>Food</th><th>Qty</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                    <div id="csp-score" class="score-display"></div>
+                </div>
+            </div>
+            <div id="comparison-verdict" class="comparison-verdict"></div>
         </section>
     </main>
     <footer>
