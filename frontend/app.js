@@ -66,11 +66,24 @@ function initTechniqueSelector() {
   toggleCSPTolerance("ga");
 }
 function toggleCSPTolerance(t) {
-  const el = $(".form-group:has(#tolerance)");
-  if (el) {
-    const show = t === "csp" || t === "both";
-    el.style.display = show ? "flex" : "none";
-    el.style.opacity = show ? "1" : "0";
+  // Show/hide tolerance (CSP only)
+  const toleranceEl = $(".form-group:has(#tolerance)");
+  if (toleranceEl) {
+    const showTolerance = t === "csp" || t === "both";
+    toleranceEl.style.display = showTolerance ? "flex" : "none";
+    toleranceEl.style.opacity = showTolerance ? "1" : "0";
+  }
+  // Show/hide population & generations (GA only)
+  const populationEl = $(".form-group:has(#population)");
+  const generationsEl = $(".form-group:has(#generations)");
+  const showGA = t === "ga" || t === "both";
+  if (populationEl) {
+    populationEl.style.display = showGA ? "flex" : "none";
+    populationEl.style.opacity = showGA ? "1" : "0";
+  }
+  if (generationsEl) {
+    generationsEl.style.display = showGA ? "flex" : "none";
+    generationsEl.style.opacity = showGA ? "1" : "0";
   }
 }
 async function handleOptimizeSubmit(e) {

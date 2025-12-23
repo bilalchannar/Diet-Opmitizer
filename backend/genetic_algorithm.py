@@ -9,20 +9,20 @@ def run_genetic_algorithm(input_data):
     budget = float(input_data.get("budget", 10))
     max_qty = int(input_data.get("max_qty_per_food", 6))
     
-    def totals_cost(diet):
-        total = {k: 0.0 for k in ["calories", "protein", "carbs", "fat"]}
+    def compute_totals_and_cost(diet):
+        totals = {nut: 0.0 for nut in ["calories", "protein", "carbs", "fat"]}
         cost = 0.0
         for i, qty in enumerate(diet):
             if qty > 0:
-                f = food_db[i]
-                for k in total:
-                    total[k] += f[k] * qty
-                cost += f["price"] * qty
-        return total, cost
+                food = food_db[i]
+                for nut in totals:
+                    totals[nut] += food[nut] * qty
+                cost += food["price"] * qty
+        return totals, cost
 
-    def repair(diet):
+    def repair_diet(diet):
         diet = [max(0, min(max_qty, int(q))) for q in diet]
-        _, cost = totals_cost(diet)
+        _, cost = compute_totals_and_cost(diet)
         if cost > budget:
             for _ in range(100):
                 removed = False
@@ -31,57 +31,52 @@ def run_genetic_algorithm(input_data):
                         diet[i] -= 1
                         removed = True
                         break
-                if not removed or totals_cost(diet)[1] <= budget:
+                if not removed or compute_totals_and_cost(diet)[1] <= budget:
                     break
         return diet
 
-    def fitness(diet):
-        diet = repair(diet[:])
-        total, cost = totals_cost(diet)
+    def compute_fitness(diet):
+        diet = repair_diet(diet[:])
+        totals, cost = compute_totals_and_cost(diet)
         if cost > budget or sum(diet) == 0:
             return 0.0
-        
         weights = {"protein": 2.0, "calories": 1.0, "carbs": 0.6, "fat": 0.6}
-        err = sum(weights.get(k, 1) * abs(targets[k] - total[k]) / max(targets[k], 1) for k in targets)
+        err = sum(weights.get(nut, 1) * abs(targets[nut] - totals[nut]) / max(targets[nut], 1) for nut in targets)
         score = max(1.0, min(100.0, 100.0 - err * 100.0))
         return score
 
-    pop_size = int(input_data.get("population_size", 30))
+    population_size = int(input_data.get("population_size", 30))
     generations = int(input_data.get("generations", 50))
-    mut_rate = float(input_data.get("mutation_rate", 0.20))
-    elite_k = int(input_data.get("elite_k", 4))
-    tournament_k = int(input_data.get("tournament_k", 4))
-    elite_k = max(1, min(elite_k, pop_size))
+    mutation_rate = float(input_data.get("mutation_rate", 0.20))
+    elite_count = int(input_data.get("elite_k", 4))
+    tournament_size = int(input_data.get("tournament_k", 4))
+    elite_count = max(1, min(elite_count, population_size))
 
 
-    population = [repair([random.randint(0, max_qty) for _ in food_db]) for _ in range(pop_size)]
+    population_list = [repair_diet([random.randint(0, max_qty) for _ in food_db]) for _ in range(population_size)]
 
     for _ in range(generations):
-        population.sort(key=fitness, reverse=True)
-        next_gen = [p[:] for p in population[:elite_k]]
-        
-        while len(next_gen) < pop_size:
-            p1 = max(random.sample(population, min(tournament_k, len(population))), key=fitness)
-            p2 = max(random.sample(population, min(tournament_k, len(population))), key=fitness)
-            
+        population_list.sort(key=compute_fitness, reverse=True)
+        next_gen = [p[:] for p in population_list[:elite_count]]
+        while len(next_gen) < population_size:
+            p1 = max(random.sample(population_list, min(tournament_size, len(population_list))), key=compute_fitness)
+            p2 = max(random.sample(population_list, min(tournament_size, len(population_list))), key=compute_fitness)
             cut = random.randint(1, len(p1) - 1) if len(p1) > 1 else 0
-            child = repair(p1[:cut] + p2[cut:])
-            
-            if random.random() < mut_rate:
+            child = repair_diet(p1[:cut] + p2[cut:])
+            if random.random() < mutation_rate:
                 for _ in range(random.randint(1, 2)):
                     idx = random.randint(0, len(child) - 1)
                     child[idx] = max(0, min(max_qty, child[idx] + random.choice([-2, -1, 1, 2])))
-            next_gen.append(repair(child))
-        
-        population = next_gen
+            next_gen.append(repair_diet(child))
+        population_list = next_gen
 
-    best = max(population, key=fitness)
-    best = repair(best)
-    total, cost = totals_cost(best)
+    best_solution = max(population_list, key=compute_fitness)
+    best_solution = repair_diet(best_solution)
+    totals, cost = compute_totals_and_cost(best_solution)
 
     return {
-        "diet": [{"food": food_db[i]["name"], "qty": int(q)} for i, q in enumerate(best) if q > 0],
-        "score": float(fitness(best)),
-        "totals": total,
+        "diet": [{"food": food_db[i]["name"], "qty": int(q)} for i, q in enumerate(best_solution) if q > 0],
+        "score": float(compute_fitness(best_solution)),
+        "totals": totals,
         "cost": cost
     }
