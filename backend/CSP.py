@@ -1,6 +1,7 @@
 from typing import Dict, List, Any
 
 def run_csp_solver(input_data: Dict[str, Any]) -> Dict[str, Any]:
+
     food_db = input_data["food_db"]
     if not food_db:
         raise ValueError("Food database is empty. Please add foods first.")
@@ -26,6 +27,7 @@ def run_csp_solver(input_data: Dict[str, Any]) -> Dict[str, Any]:
         return totals, cost
 
     def is_valid(diet):
+        """Check budget and nutrition ranges"""
         totals, cost = calc_totals(diet)
         
         if cost > budget:
@@ -42,6 +44,7 @@ def run_csp_solver(input_data: Dict[str, Any]) -> Dict[str, Any]:
         return True
 
     def calc_score(diet):
+        """Score from 0-100 based on how close to targets"""
         totals, cost = calc_totals(diet)
         
         if cost > budget or sum(diet) == 0:
@@ -60,6 +63,7 @@ def run_csp_solver(input_data: Dict[str, Any]) -> Dict[str, Any]:
         return max(1.0, min(100.0, score))
 
     def greedy_start():
+        """Quick starting solution - prioritize protein per dollar"""
         diet = [0] * len(food_db)
         budget_left = budget
 

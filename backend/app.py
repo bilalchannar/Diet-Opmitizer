@@ -3,8 +3,8 @@ from flask_cors import CORS
 from datetime import datetime
 from pymongo import MongoClient
 from flask import Flask, request, jsonify
-from genetic_algorithm import run_genetic_algorithm
-from csp_solver import run_csp_solver
+from GA import run_genetic_algorithm
+from CSP import run_csp_solver
 
 app = Flask(__name__)
 CORS(app)

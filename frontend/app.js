@@ -66,14 +66,12 @@ function initTechniqueSelector() {
   toggleCSPTolerance("ga");
 }
 function toggleCSPTolerance(t) {
-  // Show/hide tolerance (CSP only)
   const toleranceEl = $(".form-group:has(#tolerance)");
   if (toleranceEl) {
     const showTolerance = t === "csp" || t === "both";
     toleranceEl.style.display = showTolerance ? "flex" : "none";
     toleranceEl.style.opacity = showTolerance ? "1" : "0";
   }
-  // Show/hide population & generations (GA only)
   const populationEl = $(".form-group:has(#population)");
   const generationsEl = $(".form-group:has(#generations)");
   const showGA = t === "ga" || t === "both";
